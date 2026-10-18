@@ -105,7 +105,9 @@ def _timed(torch, fn):
     return out, time.perf_counter() - t
 
 
-def cache_vs_none(model, torch, prompt_len=128, new_tokens=384) -> dict:
+def cache_vs_none(model, torch, prompt_len=1536, new_tokens=256) -> dict:
+    # A long prompt is needed: raw HF forward passes carry ~30 ms of fixed
+    # kernel-launch overhead, which hides recompute cost at short contexts.
     ids = torch.randint(0, model.config.vocab_size, (1, prompt_len), device="cuda")
     res = {}
     with torch.inference_mode():
