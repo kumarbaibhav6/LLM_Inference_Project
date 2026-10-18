@@ -43,7 +43,9 @@ def run(lengths, trials, max_tokens):
             for kind, q in (("cold", QUESTIONS[t % len(QUESTIONS)]),
                             ("hit", QUESTIONS[(t + 1) % len(QUESTIONS)])):
                 before = scrape_metrics()
-                r = timed_chat(client, chat(sys_prompt, q), max_tokens=max_tokens)
+                # Fixed output length: different questions would otherwise produce
+                # different answer lengths and confound the end-to-end comparison.
+                r = timed_chat(client, chat(sys_prompt, q), max_tokens=max_tokens, ignore_eos=True)
                 after = scrape_metrics()
                 hits = metric(after, *PREFIX_HITS) - metric(before, *PREFIX_HITS)
                 queries = metric(after, *PREFIX_QUERIES) - metric(before, *PREFIX_QUERIES)
