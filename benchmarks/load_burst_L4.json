@@ -1,0 +1,522 @@
+{
+  "server": {
+    "model": "Qwen/Qwen2.5-1.5B-Instruct",
+    "gpu": "NVIDIA L4",
+    "prefix_caching": true,
+    "num_gpu_blocks_override": null,
+    "max_model_len": 4096,
+    "command": [
+      "vllm",
+      "serve",
+      "Qwen/Qwen2.5-1.5B-Instruct",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "8000",
+      "--max-model-len",
+      "4096",
+      "--gpu-memory-utilization",
+      "0.9",
+      "--enable-prefix-caching"
+    ],
+    "gpu_kv_cache_tokens": 602864,
+    "max_concurrency_at_max_len": 147.18
+  },
+  "stats": {
+    "concurrency": 25,
+    "requests": 25,
+    "failed": 0,
+    "wall_s": 6.557,
+    "output_tok_per_s": 976.1,
+    "req_per_s": 3.813,
+    "ttft_p50_ms": 1159.9,
+    "ttft_p99_ms": 1827.0,
+    "tpot_p50_ms": 19.21,
+    "tpot_p99_ms": 21.15,
+    "e2e_p50_s": 6.06,
+    "mean_running": 19.93,
+    "peak_running": 25.0,
+    "peak_waiting": 21.0,
+    "peak_kv_usage": 0.041430012208716005,
+    "preemptions": 0.0,
+    "single_request_s": 3.45
+  },
+  "requests": [
+    {
+      "request_id": 0,
+      "t_submit": 0.0009491069999967294,
+      "ttft": 1.8619267520000449,
+      "e2e": 6.529910224999867,
+      "prompt_tokens": 743,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.018305817541175773
+    },
+    {
+      "request_id": 1,
+      "t_submit": 0.3963563479999266,
+      "ttft": 1.6067579180000848,
+      "e2e": 6.148093700000118,
+      "prompt_tokens": 752,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.017809159929411893
+    },
+    {
+      "request_id": 2,
+      "t_submit": 0.3976247189998503,
+      "ttft": 1.4647842910001145,
+      "e2e": 6.1311010500000975,
+      "prompt_tokens": 745,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.01829928140784307
+    },
+    {
+      "request_id": 3,
+      "t_submit": 0.39888395399998444,
+      "ttft": 1.7165815539999585,
+      "e2e": 6.156995709000057,
+      "prompt_tokens": 744,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.01741338884313764
+    },
+    {
+      "request_id": 4,
+      "t_submit": 0.40013107599997966,
+      "ttft": 1.7158125119999568,
+      "e2e": 6.155703680999977,
+      "prompt_tokens": 745,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.017411337917647138
+    },
+    {
+      "request_id": 5,
+      "t_submit": 0.4011509810000007,
+      "ttft": 1.715235655000015,
+      "e2e": 6.155424626000013,
+      "prompt_tokens": 744,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.01741250576862744
+    },
+    {
+      "request_id": 6,
+      "t_submit": 0.40339255100002447,
+      "ttft": 1.599267302999806,
+      "e2e": 6.1411551979999786,
+      "prompt_tokens": 743,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.01781132507843205
+    },
+    {
+      "request_id": 7,
+      "t_submit": 0.4041791170000124,
+      "ttft": 0.6045739070000309,
+      "e2e": 6.015922050999961,
+      "prompt_tokens": 746,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.021220973113725217
+    },
+    {
+      "request_id": 8,
+      "t_submit": 0.42778988600002776,
+      "ttft": 0.6670478500000172,
+      "e2e": 6.00678274400002,
+      "prompt_tokens": 743,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.0209401368392157
+    },
+    {
+      "request_id": 9,
+      "t_submit": 0.429211204000012,
+      "ttft": 0.6661477469999681,
+      "e2e": 6.005255670999986,
+      "prompt_tokens": 742,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.020937678133333405
+    },
+    {
+      "request_id": 10,
+      "t_submit": 0.43040403800000604,
+      "ttft": 0.7896164280000448,
+      "e2e": 6.020827613999927,
+      "prompt_tokens": 744,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.020514553670587774
+    },
+    {
+      "request_id": 11,
+      "t_submit": 0.4315703059999123,
+      "ttft": 0.7889341850000164,
+      "e2e": 6.019604372999993,
+      "prompt_tokens": 753,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.02051243210980383
+    },
+    {
+      "request_id": 12,
+      "t_submit": 0.43271078899988424,
+      "ttft": 0.7882551780000995,
+      "e2e": 6.022984741000073,
+      "prompt_tokens": 746,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.020528351227450878
+    },
+    {
+      "request_id": 13,
+      "t_submit": 0.4338388930000292,
+      "ttft": 0.9123051770000075,
+      "e2e": 6.035234845999867,
+      "prompt_tokens": 745,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.02008992027058768
+    },
+    {
+      "request_id": 14,
+      "t_submit": 0.4349982530000034,
+      "ttft": 0.911602111999855,
+      "e2e": 6.0340171279999595,
+      "prompt_tokens": 746,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.02008790202352982
+    },
+    {
+      "request_id": 15,
+      "t_submit": 0.4361282109998683,
+      "ttft": 0.9109731510000074,
+      "e2e": 6.037864431000116,
+      "prompt_tokens": 745,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.020105456000000427
+    },
+    {
+      "request_id": 16,
+      "t_submit": 0.4372691659998509,
+      "ttft": 1.0369109709999975,
+      "e2e": 6.0466460150000785,
+      "prompt_tokens": 744,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.019646019780392474
+    },
+    {
+      "request_id": 17,
+      "t_submit": 0.4385049689999505,
+      "ttft": 1.0362214799999947,
+      "e2e": 6.045358727999883,
+      "prompt_tokens": 747,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.0196436754823525
+    },
+    {
+      "request_id": 18,
+      "t_submit": 0.4396463349999067,
+      "ttft": 1.1605696530000387,
+      "e2e": 6.059812733999934,
+      "prompt_tokens": 744,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.01921271796470547
+    },
+    {
+      "request_id": 19,
+      "t_submit": 0.4407969599999433,
+      "ttft": 1.1598846710000998,
+      "e2e": 6.058609092000097,
+      "prompt_tokens": 743,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.019210684003921556
+    },
+    {
+      "request_id": 20,
+      "t_submit": 0.44194297099988944,
+      "ttft": 1.1591926520000015,
+      "e2e": 6.061419163999972,
+      "prompt_tokens": 744,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.01922441769411753
+    },
+    {
+      "request_id": 21,
+      "t_submit": 0.4430852430000414,
+      "ttft": 1.2845965639999122,
+      "e2e": 6.072057915999949,
+      "prompt_tokens": 753,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.018774358243137397
+    },
+    {
+      "request_id": 22,
+      "t_submit": 0.4444332860000486,
+      "ttft": 1.2837082379999174,
+      "e2e": 6.070656760999782,
+      "prompt_tokens": 746,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.018772347149019077
+    },
+    {
+      "request_id": 23,
+      "t_submit": 0.44564339399994424,
+      "ttft": 1.2829798959999152,
+      "e2e": 6.071987694999962,
+      "prompt_tokens": 745,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.018780422741176653
+    },
+    {
+      "request_id": 24,
+      "t_submit": 0.4467943780000496,
+      "ttft": 1.4151751079998576,
+      "e2e": 6.081980136999846,
+      "prompt_tokens": 746,
+      "completion_tokens": 256,
+      "error": "",
+      "tpot": 0.018301196192156817
+    }
+  ],
+  "timeline": [
+    {
+      "t": 0.4496500949999245,
+      "running": 0.0,
+      "waiting": 0.0,
+      "kv_usage": 0.0,
+      "preemptions": 0.0
+    },
+    {
+      "t": 0.6586322599998766,
+      "running": 0.0,
+      "waiting": 0.0,
+      "kv_usage": 0.0,
+      "preemptions": 0.0
+    },
+    {
+      "t": 0.8670326279998335,
+      "running": 0.0,
+      "waiting": 0.0,
+      "kv_usage": 0.0,
+      "preemptions": 0.0
+    },
+    {
+      "t": 1.0771073670000533,
+      "running": 4.0,
+      "waiting": 21.0,
+      "kv_usage": 0.004697701576516833,
+      "preemptions": 0.0
+    },
+    {
+      "t": 1.2861626629999137,
+      "running": 10.0,
+      "waiting": 15.0,
+      "kv_usage": 0.011545198789744693,
+      "preemptions": 0.0
+    },
+    {
+      "t": 1.4948253119998753,
+      "running": 15.0,
+      "waiting": 10.0,
+      "kv_usage": 0.01836615531609953,
+      "preemptions": 0.0
+    },
+    {
+      "t": 1.703535052999996,
+      "running": 18.0,
+      "waiting": 7.0,
+      "kv_usage": 0.021789903922713516,
+      "preemptions": 0.0
+    },
+    {
+      "t": 1.912086828999918,
+      "running": 23.0,
+      "waiting": 2.0,
+      "kv_usage": 0.028610860449068465,
+      "preemptions": 0.0
+    },
+    {
+      "t": 2.1243329540000104,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.031371091883858004,
+      "preemptions": 0.0
+    },
+    {
+      "t": 2.3335395509998307,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.03190190562131745,
+      "preemptions": 0.0
+    },
+    {
+      "t": 2.545608482000034,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.032538882106268874,
+      "preemptions": 0.0
+    },
+    {
+      "t": 2.757005124999978,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.03304315515685541,
+      "preemptions": 0.0
+    },
+    {
+      "t": 2.9650073059999613,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.0334678061468231,
+      "preemptions": 0.0
+    },
+    {
+      "t": 3.1742717829999947,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.0339189978236637,
+      "preemptions": 0.0
+    },
+    {
+      "t": 3.3828571189999366,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.0345294336217421,
+      "preemptions": 0.0
+    },
+    {
+      "t": 3.5911563170000136,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.035033706672328635,
+      "preemptions": 0.0
+    },
+    {
+      "t": 3.7990249449999283,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.035458357662296325,
+      "preemptions": 0.0
+    },
+    {
+      "t": 4.0089955470000405,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.035909549339136926,
+      "preemptions": 0.0
+    },
+    {
+      "t": 4.220632609999939,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.03651998513721533,
+      "preemptions": 0.0
+    },
+    {
+      "t": 4.429929454999865,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.03702425818780186,
+      "preemptions": 0.0
+    },
+    {
+      "t": 4.640251884999998,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.03744890917776955,
+      "preemptions": 0.0
+    },
+    {
+      "t": 4.851219664999917,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.03790010085461015,
+      "preemptions": 0.0
+    },
+    {
+      "t": 5.063761786999976,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.038510536652688554,
+      "preemptions": 0.0
+    },
+    {
+      "t": 5.2766921009999805,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.03901480970327509,
+      "preemptions": 0.0
+    },
+    {
+      "t": 5.489121716,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.03943946069324278,
+      "preemptions": 0.0
+    },
+    {
+      "t": 5.699631155999896,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.03989065237008338,
+      "preemptions": 0.0
+    },
+    {
+      "t": 5.912803111999892,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.04050108816816178,
+      "preemptions": 0.0
+    },
+    {
+      "t": 6.127926803000037,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.041005361218748315,
+      "preemptions": 0.0
+    },
+    {
+      "t": 6.341148846999886,
+      "running": 25.0,
+      "waiting": 0.0,
+      "kv_usage": 0.041430012208716005,
+      "preemptions": 0.0
+    },
+    {
+      "t": 6.551015581999991,
+      "running": 3.0,
+      "waiting": 0.0,
+      "kv_usage": 0.005016189818992545,
+      "preemptions": 0.0
+    },
+    {
+      "t": 6.759680540999852,
+      "running": 0.0,
+      "waiting": 0.0,
+      "kv_usage": 0.0,
+      "preemptions": 0.0
+    },
+    {
+      "t": 6.96809446799989,
+      "running": 0.0,
+      "waiting": 0.0,
+      "kv_usage": 0.0,
+      "preemptions": 0.0
+    }
+  ]
+}
