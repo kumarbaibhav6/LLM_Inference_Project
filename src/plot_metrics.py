@@ -154,7 +154,7 @@ def plot_sweep(gpu, made, md):
     md.append("| Concurrency | Output tok/s | TPOT p50 (ms) | TTFT p99 (ms) | Peak KV usage |")
     md.append("|---|---|---|---|---|")
     for r in rows:
-        md.append(f"| {r['concurrency']} | {r['output_tok_per_s']} | {r['tpot_p50_ms']} | {r['ttft_p99_ms']} | {r['peak_kv_usage']} |")
+        md.append(f"| {r['concurrency']} | {r['output_tok_per_s']} | {r['tpot_p50_ms']} | {r['ttft_p99_ms']} | {100 * (r['peak_kv_usage'] or 0):.1f}% |")
     md.append("")
 
 
@@ -184,8 +184,8 @@ def plot_pressure(gpu, made, md):
     md.append("## PagedAttention under KV pressure\n")
     md.append(f"- KV pool: {st.get('gpu_kv_cache_tokens')} tokens; reserving {config.MAX_MODEL_LEN} tokens per request "
               f"would admit **{st.get('contiguous_max_seqs')}** sequences")
-    md.append(f"- vLLM ran up to **{st['peak_running']}** concurrently, peak KV usage {st['peak_kv_usage']}, "
-              f"{st['preemptions']} preemptions, {st['failed']} failed requests\n")
+    md.append(f"- vLLM ran up to **{st['peak_running']:.0f}** concurrently, peak KV usage {100 * (st['peak_kv_usage'] or 0):.0f}%, "
+              f"{st['preemptions']:.0f} preemptions, {st['failed']} failed requests\n")
 
 
 def plot_kv_lab(gpu, made, md):
