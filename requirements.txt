@@ -1,0 +1,10 @@
+# Serving engine. Pinned: vLLM changes flags/metrics between minor releases.
+# 0.30.0 pins torch==2.13.0 and will replace Colab's preinstalled torch.
+vllm==0.30.0
+
+# Client + benchmarking (versions left floating; vllm constrains openai>=2.25)
+openai>=2.25
+pandas>=2.2
+matplotlib>=3.8
+requests>=2.31
+nest_asyncio>=1.6
