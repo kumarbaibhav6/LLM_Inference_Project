@@ -37,7 +37,7 @@ def build_command(args) -> list[str]:
         "--port", str(config.PORT),
         "--max-model-len", str(config.MAX_MODEL_LEN),
         "--gpu-memory-utilization", str(args.gpu_mem),
-        "--enable-prefix-caching" if args.prefix_caching else "--disable-prefix-caching",
+        "--enable-prefix-caching" if args.prefix_caching else "--no-enable-prefix-caching",
     ]
     # Turing (T4, SM 7.5) has no bf16 and no FlashAttention-2 kernels:
     # force fp16 and the Triton attention backend. Ampere+/Ada (L4) use the defaults.
