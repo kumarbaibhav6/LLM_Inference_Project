@@ -1,4 +1,4 @@
-# High-Throughput LLM Serving: vLLM benchmarks on T4 / L4
+# High-Throughput LLM Serving: vLLM benchmarks on L4
 
 A benchmarking harness that serves `Qwen2.5-1.5B-Instruct` behind vLLM's OpenAI-compatible API
 and **measures** the four mechanisms that make LLM inference cheap: the **KV cache**,
@@ -35,7 +35,7 @@ flowchart LR
 | 0 | KV cache | `src/kv_cache_demo.py` | decode with vs. without cache; prefill (compute-bound) vs. decode (memory-bound); batch-decode scaling; KV bytes/token | `kv_cache_vs_none`, `prefill_vs_decode`, `batch_decode` |
 | 0 | PagedAttention | `src/kv_cache_demo.py` | contiguous vs. paged KV allocation under realistic traffic (simulation) | `kv_fragmentation` |
 | 3 | Prefix caching | `src/test_cache.py` | cold vs. cache-hit TTFT across 750-3500-token system prompts, with a caching-disabled control | `prefix_cache_ttft` |
-| 4 | Continuous batching | `src/load_test.py --scenario burst` | 25 concurrent requests, zero failures, ≈ the time of one | (table) |
+| 4 | Continuous batching | `src/load_test.py --scenario burst` | 25 concurrent requests, zero failures, 1.9× the time of one | (table) |
 | 4 | Continuous batching | `--scenario batching` | static waves vs. continuous admission on identical requests | `batching_timeline` |
 | 4 | Throughput/latency | `--scenario sweep` | tok/s and TPOT vs. concurrency 1 to 128 | `concurrency_sweep` |
 | 4 | PagedAttention | `--scenario pressure` on a KV-starved server | running sequences above the contiguous-allocation limit; preemption instead of OOM | `kv_pressure` |
@@ -46,8 +46,8 @@ flowchart LR
 |---|---|
 | KV cache | Generating 256 tokens after a 1,536-token prompt: **7.8 s with cache vs. 31.8 s without (4.1×)**; the final step took 30 ms vs. 143 ms |
 | Prefix caching | TTFT **247 → 39 ms (−84%)** on a 3,547-token system prompt; −49% at 832 tokens. Control with caching disabled: second query within 1.2% of the first |
-| Continuous batching | Same 100 mixed-length requests: **24.4 s vs. 36.0 s for static batching (1.48×)**; mean GPU slot occupancy 20.9/25 vs. 15.0/25 |
-| Concurrency | 25-request burst: **0 failures**, done in 1.9× the time of a single request. Throughput **74 → 2,714 tok/s (37×)** from 1 to 128 concurrent requests, while per-user TPOT rose 13.4 → 32.6 ms |
+| Continuous batching | Same 100 mixed-length requests: **24.4 s vs. 36.0 s for static batching (1.48×)**; mean GPU slot occupancy 20.9/25 vs. 15.0/25. Upper bound: the continuous run reused prefix-cache entries from the static run ([details](#known-limitations)) |
+| Concurrency | 25-request burst: **0 failures**, done in 1.9× the time of a single request. Throughput **74 → 2,714 tok/s (37×)** from 1 to 128 concurrent requests, while per-user TPOT rose 13.4 → 32.6 ms. The sweep reuses prompts across levels, so 37× is likely overstated ([details](#known-limitations)) |
 | PagedAttention | With a 16,384-token KV pool (room for **4** max-length contiguous reservations), vLLM ran **21 sequences concurrently** at ~100% KV utilization, preempting 51 times with **0 failed requests** |
 
 ![Prefix caching: cold vs. cache-hit TTFT](benchmarks/prefix_cache_ttft_L4.png)
@@ -61,9 +61,16 @@ flowchart LR
 * **Batching decode is close to free.** A decode step costs 31.0 ms at batch 1 and 31.6 ms at batch 64, so throughput rises 63× ([chart](benchmarks/batch_decode_L4.png)). That is the economic argument for continuous batching.
 * **Launch overhead matters as much as FLOPs.** Raw-transformers decode (31 ms/token) runs about 3× above the L4's memory-bandwidth floor (~10 ms for 3.1 GB of weights at 300 GB/s). vLLM with CUDA graphs reaches **13.4 ms/token**. At short contexts this overhead also hides the cost of skipping the KV cache, so the cache experiment uses a 1.5K-token prompt.
 * **Prefix-cache gains scale with the cached fraction.** Only full 16-token blocks are reused (3,520 of 3,547 tokens), and decode time is unchanged, so end-to-end latency improves less (−19% with 64 output tokens) than TTFT does.
-* **The throughput/latency knee.** Up to 16 concurrent requests, TPOT stays within 15% of single-stream. Past that, TPOT and p99 TTFT climb steeply. That knee is where `--max-num-seqs` or an autoscaling threshold belongs for a latency SLO.
+* **The throughput/latency knee.** Up to 16 concurrent requests, TPOT stays within 15% of single-stream. Past that, TPOT climbs steeply. p99 TTFT also rises from 16 on, though part of that jump may come from prompts that are uncached at that level ([details](#known-limitations)). That knee is where `--max-num-seqs` or an autoscaling threshold belongs for a latency SLO.
 
 Full tables: [`benchmarks/summary_L4.md`](benchmarks/summary_L4.md). Raw per-request data: `benchmarks/*.json`.
+
+## Known limitations
+
+* **Batching comparison (1.48×).** Static and continuous send the same 100 prompts back to back with prefix caching on, so the continuous run reuses cache entries from the static run. Scheduling is not the only variable. The first 25 simultaneous requests show it: worst TTFT was 140 ms for continuous and about 1,240 ms for static's first wave. Treat 1.48× as an upper bound. Subtracting static's prefill stalls gives a rough estimate of 1.27×. A rerun with separate prompts per run is pending.
+* **Concurrency sweep (37×).** Every level reuses the same prompt list. Concurrency 1 runs cold, levels 2 to 8 are fully cached, and from 16 up half the prompts are already cached. That favours the high end of the range and may distort TTFT at 16 and above. A rerun is pending.
+* **Not affected.** The KV cache, prefix caching and PagedAttention results use prompts that were not sent earlier in the run.
+* **Scope.** One small model on one L4 with synthetic load. These results show how each mechanism behaves, not production capacity. The T4 path is not benchmarked.
 
 ## Run it
 
@@ -97,10 +104,10 @@ docker run --gpus all --ipc=host -p 8000:8000 -v ~/.cache/huggingface:/root/.cac
 * **TTFT is measured with streaming.** Non-streaming responses arrive only when generation is done, which hides the prefill/decode split.
 * **Output length is a controlled variable.** `ignore_eos` + `max_tokens` make every request generate exactly the intended number of tokens, so runs are comparable.
 * **Cold starts are guaranteed, not hoped for.** A nonce in the first line of the system prompt changes the first KV block's hash, and that invalidates the whole chained prefix.
-* **Every experiment has a control.** Prefix caching is compared against a caching-disabled server; continuous batching is compared against static waves on the *same* engine and requests, so the only variable is the scheduling policy.
+* **Every experiment has a control.** Prefix caching is compared against a caching-disabled server; continuous batching is compared against static waves on the *same* engine and requests. Those two runs go back to back with prefix caching on, so the second starts with a warm cache ([details](#known-limitations)).
 * **Server-side truth from Prometheus.** Running/waiting requests, KV usage, prefix-cache hits and preemptions are sampled from `/metrics` during every run, alongside client-side latencies.
 * **The notebook kernel never imports torch.** GPU work runs in subprocesses, so the server can be restarted with new flags without restarting the runtime.
-* **T4 support:** Turing has no bf16 or FlashAttention-2, so the launcher detects SM < 8.0 and switches to `--dtype half --attention-backend TRITON_ATTN`.
+* **T4 support (not benchmarked):** Turing has no bf16 or FlashAttention-2, so the launcher detects SM < 8.0 and switches to `--dtype half --attention-backend TRITON_ATTN`.
 
 ## Repository layout
 

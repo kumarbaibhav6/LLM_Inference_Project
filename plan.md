@@ -6,7 +6,7 @@ The objective of this project is to build and benchmark a custom, high-throughpu
 ## 2. Learning Goals & Architectural Focus
 *   **KV Cache & Memory Bottlenecks:** Demonstrate the $O(N^2)$ prefill compute burden versus the $O(N)$ decode memory bottleneck.
 *   **PagedAttention:** Validate how block chunking eliminates VRAM fragmentation.
-*   **Automatic Prefix Caching:** Measure the drastic reduction in Time-To-First-Token (TTFT) when using Radix tree cache detection for heavy, static system prompts.
+*   **Automatic Prefix Caching:** Measure the drastic reduction in Time-To-First-Token (TTFT) when using block-hash cache detection for heavy, static system prompts.
 *   **Continuous Batching:** Prove the engine can keep the GPU saturated under asynchronous, concurrent load without traditional static batching idle time.
 
 ---
@@ -59,7 +59,7 @@ All phases were verified on a Colab **L4** on 2026-10-18 (vLLM 0.30.0, torch 2.1
 * **vLLM pinned to 0.30.0.** Flags and metric names drift between minor releases. 0.30 uses `--no-enable-prefix-caching`, while newer docs show `--disable-prefix-caching`.
 * **"Radix tree" corrected.** That is SGLang's RadixAttention; vLLM's APC uses chained block hashes. See `docs/concepts.md` section 4.
 * **Phase 3 hardened:** streaming TTFT, warm-up, 5 trials × 4 prompt lengths (750-3500 tokens), a nonce to guarantee cold starts, Prometheus cache-hit counts, and a caching-disabled control run.
-* **Phase 4 extended:** besides the 25-request burst, static vs. continuous batching on identical requests, a concurrency sweep, and server-side metrics sampling. A burst finishing without OOM alone doesn't prove continuous batching.
+* **Phase 4 extended:** besides the 25-request burst, static vs. continuous batching on identical requests, a concurrency sweep, and server-side metrics sampling. A burst finishing without OOM alone doesn't prove continuous batching. The batching and sweep runs reuse prompts with prefix caching on, so see Known limitations in the README.
 * **Added Phase 0 (`src/kv_cache_demo.py`):** KV cache on/off, prefill vs. decode, batch-decode scaling, and contiguous vs. paged allocation math. This makes the "KV cache & memory bottlenecks" goal measurable.
 * **Added PagedAttention lab:** a KV-starved server (`--num-gpu-blocks 1024`) under 128 concurrent requests, showing admission above the contiguous limit plus preemption. The original plan had no PagedAttention experiment.
 * **Added `docs/concepts.md`** (theory + interview questions) and `notebooks/colab_runner.ipynb` (end-to-end driver).
