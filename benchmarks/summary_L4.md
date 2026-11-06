@@ -34,7 +34,7 @@ Control (prefix caching disabled): second query TTFT within 1.2% of the first.
 | static | 36.027 | 817.4 | 15.03 / 25 | 6.045 |
 | continuous | 24.386 | 1207.6 | 20.87 / 25 | 5.185 |
 
-Continuous batching: **1.48x** faster on identical requests.
+Continuous batching: **1.48x** faster on identical requests. Upper bound: the continuous run reused prefix-cache entries from the static run (see Known limitations in the README).
 
 ## Concurrency sweep
 
@@ -48,6 +48,8 @@ Continuous batching: **1.48x** faster on identical requests.
 | 32 | 1489.0 | 18.13 | 1564.1 | 5.3% |
 | 64 | 2153.6 | 23.32 | 3109.2 | 10.7% |
 | 128 | 2714.3 | 32.55 | 7200.6 | 21.1% |
+
+Note: levels reuse the same prompt list, so higher levels get partial prefix-cache hits (see Known limitations in the README).
 
 ## PagedAttention under KV pressure
 
